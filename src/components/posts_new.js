@@ -8,6 +8,7 @@ class PostsNew extends Component {
 
 
   renderField(field){
+    //console.log("field.input ",field.input)
     const { meta: { touched, error } } = field
     const className=`form-group ${touched && error ? 'has-danger' : ''}`
 
@@ -27,25 +28,34 @@ class PostsNew extends Component {
   }
 
   onSubmit(values){
-    console.log(JSON.stringify(values.data))
+
+    this.props.createPost(values, () => {
+      this.props.history.push('/')
+    })
+
+    //console.log(JSON.stringify(values))
   }
 
   render(){
     const { handleSubmit } = this.props
+
     return (
-      <form onSubmit={this.onSubmit.bind(this)}>
+      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
         <Field
           label="Title"
           name="title"
-          component={this.renderField}/>
+          component={this.renderField}
+        />
         <Field
           label="Categories"
           name="categories"
-          component={this.renderField}/>
+          component={this.renderField}
+        />
         <Field
           label="Post Content"
           name="content"
-          component={this.renderField}/>
+          component={this.renderField}
+        />
         <button type="submit" className="btn btn-primary">Submit</button>
         <Link to="/" className="btn btn-danger">Cancel</Link>
       </form>
@@ -74,5 +84,5 @@ export default reduxForm({
   validate: validate,
   form:'PostsNewForm'
 })(
-  connect(null, { createPost }) (PostsNew)
+  connect(null, { createPost })(PostsNew)
 )
